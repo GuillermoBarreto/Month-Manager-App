@@ -7,6 +7,7 @@ interface Props {
 
 export default function ExpenseList({ expenses, onDelete }: Props) {
   if (expenses.length === 0) return <p className="text-gray-500">No expenses yet.</p>;
+
   return (
     <div className="space-y-2">
       {expenses.map(e => (
