@@ -1,30 +1,26 @@
-import { Expense, Income } from "../types/finance";
+import { Transaction } from "../types/finance";
 
-const EXPENSE_STORAGE_KEY = "month-manager-expenses";
-const INCOME_STORAGE_KEY = "month-manager-incomes";
+const STORAGE_KEY = "month-manager-data";
 
-export function loadExpenses(): Expense[] {
-  try {
-    const raw = localStorage.getItem(EXPENSE_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
+export function loadTransactions(
+  month: number,
+  year: number
+): Transaction[] {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return [];
+
+  const data = JSON.parse(raw);
+  return data[`${year}-${month}`] || [];
 }
 
-export function saveExpenses(expenses: Expense[]) {
-  localStorage.setItem(EXPENSE_STORAGE_KEY, JSON.stringify(expenses));
-}
+export function saveTransactions(
+  month: number,
+  year: number,
+  transactions: Transaction[]
+) {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  const data = raw ? JSON.parse(raw) : {};
 
-export function loadIncomes(): Income[] {
-  try {
-    const raw = localStorage.getItem(INCOME_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveIncomes(incomes: Income[]) {
-  localStorage.setItem(INCOME_STORAGE_KEY, JSON.stringify(incomes));
+  data[`${year}-${month}`] = transactions;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }

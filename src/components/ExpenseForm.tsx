@@ -1,43 +1,45 @@
 import { useState } from "react";
-import { Expense, Category } from "../types/finance";
+import { Transaction } from "../types/finance";
 
 interface Props {
-  onAdd: (expense: Expense) => void;
+  onAdd: (t: Transaction) => void;
 }
 
 export default function ExpenseForm({ onAdd }: Props) {
-  const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState<Category>("Other");
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [category, setCategory] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!name || !amount) return;
+    if (!amount || !category) return;
 
     onAdd({
       id: crypto.randomUUID(),
-      name,
+      type: "expense",
       amount: Number(amount),
       category,
-      date,
+      date: new Date().toISOString(),
     });
 
-    setName("");
     setAmount("");
-    setCategory("Other");
+    setCategory("");
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-2xl shadow space-y-3">
-      <h2 className="text-lg font-semibold">Add Expense</h2>
-      <input className="w-full border rounded-xl p-2" placeholder="Expense name" value={name} onChange={e => setName(e.target.value)} />
-      <input className="w-full border rounded-xl p-2" type="number" placeholder="Amount" value={amount} onChange={e => setAmount(e.target.value)} />
-      <select className="w-full border rounded-xl p-2" value={category} onChange={e => setCategory(e.target.value as Category)}>
-        {["Rent","Utilities","Food","Transportation","Entertainment","Other"].map(c => <option key={c} value={c}>{c}</option>)}
-      </select>
-      <input className="w-full border rounded-xl p-2" type="date" value={date} onChange={e => setDate(e.target.value)} />
-      <button className="w-full bg-black text-white rounded-xl py-2">Add Expense</button>
+    <form onSubmit={submit}>
+      <h3>Add Expense</h3>
+      <input
+        placeholder="Amount"
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <input
+        placeholder="Category"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      />
+      <button>Add</button>
     </form>
   );
 }

@@ -1,37 +1,45 @@
 import { useState } from "react";
-import { Income } from "../types/finance";
+import { Transaction } from "../types/finance";
 
 interface Props {
-  onAdd: (income: Income) => void;
+  onAdd: (t: Transaction) => void;
 }
 
 export default function IncomeForm({ onAdd }: Props) {
-  const [source, setSource] = useState("");
   const [amount, setAmount] = useState("");
-  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [category, setCategory] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!source || !amount) return;
+    if (!amount || !category) return;
 
     onAdd({
       id: crypto.randomUUID(),
-      source,
+      type: "income",
       amount: Number(amount),
-      date,
+      category,
+      date: new Date().toISOString(),
     });
 
-    setSource("");
     setAmount("");
+    setCategory("");
   }
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-4 rounded-2xl shadow space-y-3">
-      <h2 className="text-lg font-semibold">Add Income</h2>
-      <input className="w-full border rounded-xl p-2" placeholder="Income source" value={source} onChange={e => setSource(e.target.value)} />
-      <input className="w-full border rounded-xl p-2" type="number" placeholder="Amount" value={amount} onChange={e => setAmount(e.target.value)} />
-      <input className="w-full border rounded-xl p-2" type="date" value={date} onChange={e => setDate(e.target.value)} />
-      <button className="w-full bg-black text-white rounded-xl py-2">Add Income</button>
+    <form onSubmit={submit}>
+      <h3>Add Income</h3>
+      <input
+        placeholder="Amount"
+        type="number"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+      />
+      <input
+        placeholder="Category"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      />
+      <button>Add</button>
     </form>
   );
 }

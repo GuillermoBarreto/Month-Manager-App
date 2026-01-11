@@ -1,17 +1,27 @@
 interface Props {
-  value: string;
-  onChange: (v: string) => void;
+  month: number;
+  year: number;
+  onChange: (month: number, year: number) => void;
 }
 
-export default function MonthSelector({ value, onChange }: Props) {
+export default function MonthSelector({ month, year, onChange }: Props) {
   return (
-    <div className="bg-white p-4 rounded-2xl shadow">
-      <label className="block text-sm text-gray-500 mb-1">Selected month</label>
+    <div>
+      <select
+        value={month}
+        onChange={(e) => onChange(Number(e.target.value), year)}
+      >
+        {Array.from({ length: 12 }).map((_, i) => (
+          <option key={i} value={i}>
+            {new Date(0, i).toLocaleString("default", { month: "long" })}
+          </option>
+        ))}
+      </select>
+
       <input
-        type="month"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="border rounded-xl p-2"
+        type="number"
+        value={year}
+        onChange={(e) => onChange(month, Number(e.target.value))}
       />
     </div>
   );

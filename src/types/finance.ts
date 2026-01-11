@@ -1,22 +1,10 @@
-export type Category =
-  | "Rent"
-  | "Utilities"
-  | "Food"
-  | "Transportation"
-  | "Entertainment"
-  | "Other";
+export type TransactionType = "income" | "expense";
 
-export interface Expense {
+export interface Transaction {
   id: string;
-  name: string;
+  type: TransactionType;
   amount: number;
-  category: Category;
-  date: string; // YYYY-MM-DD
-}
-
-export interface Income {
-  id: string;
-  source: string;
-  amount: number;
-  date: string; // YYYY-MM-DD
+  category: string;
+  date: string;
+  note?: string;
 }
