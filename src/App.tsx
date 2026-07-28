@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Transaction } from "./types/finance";
+import { Transaction, TransactionDraft } from "./types/finance";
 import { loadAllTransactions, monthKey, saveAllTransactions } from "./utils/storage";
 
 import MonthSelector from "./components/MonthSelector";
@@ -15,6 +15,8 @@ export default function App() {
   const [transactionsByMonth, setTransactionsByMonth] = useState(loadAllTransactions);
   const key = monthKey(month, year);
   const transactions = transactionsByMonth[key] ?? [];
+  const defaultDate = new Date(year, month, 1).toISOString().slice(0, 10);
+  const maxDate = new Date(year, month + 1, 0).toISOString().slice(0, 10);
 
   function updateTransactions(updater: (current: Transaction[]) => Transaction[]) {
     setTransactionsByMonth(previous => {
@@ -24,8 +26,9 @@ export default function App() {
     });
   }
 
-  function addTransaction(t: Transaction) {
-    updateTransactions(current => [...current, t]);
+  function addTransaction(type: Transaction["type"], draft: TransactionDraft) {
+    const transaction: Transaction = { id: crypto.randomUUID(), type, ...draft };
+    updateTransactions(current => [...current, transaction]);
   }
 
   function deleteTransaction(id: string) {
@@ -38,7 +41,7 @@ export default function App() {
         <div>
           <p className="eyebrow">PERSONAL FINANCE</p>
           <h1>Month Manager</h1>
-          <p className="subtitle">A clear view of your money, one month at a time.</p>
+          <p className="subtitle">Plan with confidence, one month at a time.</p>
         </div>
         <MonthSelector month={month} year={year} onChange={(m, y) => { setMonth(m); setYear(y); }} />
       </header>
@@ -47,8 +50,8 @@ export default function App() {
 
       <section className="content-grid" aria-label="Monthly transactions">
         <div className="forms-panel">
-          <IncomeForm onAdd={addTransaction} />
-          <ExpenseForm onAdd={addTransaction} />
+          <IncomeForm key={`income-${key}`} defaultDate={defaultDate} maxDate={maxDate} onAdd={(draft) => addTransaction("income", draft)} />
+          <ExpenseForm key={`expense-${key}`} defaultDate={defaultDate} maxDate={maxDate} onAdd={(draft) => addTransaction("expense", draft)} />
         </div>
         <div className="lists-panel">
           <IncomeList items={transactions.filter(t => t.type === "income")} onDelete={deleteTransaction} />

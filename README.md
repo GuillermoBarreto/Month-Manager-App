@@ -6,7 +6,8 @@ Built as a focused React application, Month Manager prioritizes a fast, low-fric
 
 ## Highlights
 
-- Tracks income and expenses independently with amount and category validation.
+- Tracks income and expenses independently with amount, category, and in-month date validation.
+- Captures optional transaction notes and presents a date-sorted activity history.
 - Presents monthly income, expenses, and net balance in a concise summary dashboard.
 - Keeps transaction data isolated by month and year, so switching periods does not overwrite existing records.
 - Persists data locally in the browser, allowing the app to work without an account or backend.
@@ -58,8 +59,8 @@ npm run preview
 ## How to use Month Manager
 
 1. Choose the budget period using the month and year controls in the upper-right corner.
-2. In **Add income**, enter a positive amount and a category such as `Salary`, `Freelance`, or `Interest`, then select **Add income**.
-3. In **Add expense**, enter a positive amount and a category such as `Rent`, `Groceries`, or `Transport`, then select **Add expense**.
+2. In **Add income**, enter a positive amount, date, category such as `Salary`, `Freelance`, or `Interest`, and an optional note, then select **Add income**.
+3. In **Add expense**, enter a positive amount, date, category such as `Rent`, `Groceries`, or `Transport`, and an optional note, then select **Add expense**.
 4. Review the summary cards to see the selected period's total income, total expenses, and remaining balance.
 5. Review the lists to see the transactions for the selected month. Select the **×** button next to an entry to remove it.
 6. Switch to another month or year at any time. Each period maintains its own transactions.
@@ -79,7 +80,7 @@ src/
 
 ## Future opportunities
 
-- Add editable transactions and transaction dates.
+- Add editable transactions and recurring-income support.
 - Add category-level spending insights and trends.
 - Support import/export or authenticated cloud synchronization.
 - Add automated component and persistence tests.
