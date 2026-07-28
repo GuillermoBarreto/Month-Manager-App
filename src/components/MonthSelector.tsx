@@ -6,7 +6,9 @@ interface Props {
 
 export default function MonthSelector({ month, year, onChange }: Props) {
   return (
-    <div>
+    <div className="month-selector" aria-label="Select budget month">
+      <label>
+        <span className="sr-only">Month</span>
       <select
         value={month}
         onChange={(e) => onChange(Number(e.target.value), year)}
@@ -17,12 +19,18 @@ export default function MonthSelector({ month, year, onChange }: Props) {
           </option>
         ))}
       </select>
+      </label>
 
+      <label>
+        <span className="sr-only">Year</span>
       <input
         type="number"
+        min="2000"
+        max="2100"
         value={year}
         onChange={(e) => onChange(month, Number(e.target.value))}
       />
+      </label>
     </div>
   );
 }

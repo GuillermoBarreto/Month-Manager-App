@@ -11,7 +11,7 @@ export default function ExpenseForm({ onAdd }: Props) {
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!amount || !category) return;
+    if (!amount || !category || Number(amount) <= 0) return;
 
     onAdd({
       id: crypto.randomUUID(),
@@ -26,20 +26,25 @@ export default function ExpenseForm({ onAdd }: Props) {
   }
 
   return (
-    <form onSubmit={submit}>
-      <h3>Add Expense</h3>
+    <form className="transaction-form expense-form" onSubmit={submit}>
+      <div className="form-heading"><span className="form-icon">↙</span><h2>Add expense</h2></div>
       <input
         placeholder="Amount"
         type="number"
+        min="0.01"
+        step="0.01"
+        inputMode="decimal"
+        required
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
       />
       <input
         placeholder="Category"
         value={category}
+        required
         onChange={(e) => setCategory(e.target.value)}
       />
-      <button>Add</button>
+      <button type="submit">Add expense</button>
     </form>
   );
 }

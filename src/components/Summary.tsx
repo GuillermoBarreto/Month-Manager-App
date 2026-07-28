@@ -12,13 +12,13 @@ export default function Summary({ transactions }: Props) {
   const expenses = transactions
     .filter(t => t.type === "expense")
     .reduce((s, t) => s + t.amount, 0);
+  const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
   return (
-    <div>
-      <h2>Summary</h2>
-      <p>Total Income: ${income}</p>
-      <p>Total Expenses: ${expenses}</p>
-      <p>Balance: ${income - expenses}</p>
-    </div>
+    <section className="summary-grid" aria-label="Monthly summary">
+      <div className="summary-card income-card"><span>Income</span><strong>{currency.format(income)}</strong></div>
+      <div className="summary-card expense-card"><span>Expenses</span><strong>{currency.format(expenses)}</strong></div>
+      <div className={`summary-card balance-card ${income - expenses < 0 ? "negative" : ""}`}><span>Balance</span><strong>{currency.format(income - expenses)}</strong></div>
+    </section>
   );
 }

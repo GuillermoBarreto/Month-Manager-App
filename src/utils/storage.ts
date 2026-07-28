@@ -2,25 +2,24 @@ import { Transaction } from "../types/finance";
 
 const STORAGE_KEY = "month-manager-data";
 
-export function loadTransactions(
-  month: number,
-  year: number
-): Transaction[] {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
+export type TransactionsByMonth = Record<string, Transaction[]>;
 
-  const data = JSON.parse(raw);
-  return data[`${year}-${month}`] || [];
+export function monthKey(month: number, year: number) {
+  return `${year}-${month}`;
 }
 
-export function saveTransactions(
-  month: number,
-  year: number,
-  transactions: Transaction[]
-) {
+export function loadAllTransactions(): TransactionsByMonth {
   const raw = localStorage.getItem(STORAGE_KEY);
-  const data = raw ? JSON.parse(raw) : {};
+  if (!raw) return {};
 
-  data[`${year}-${month}`] = transactions;
+  try {
+    const data = JSON.parse(raw);
+    return data && typeof data === "object" ? data : {};
+  } catch {
+    return {};
+  }
+}
+
+export function saveAllTransactions(data: TransactionsByMonth) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
