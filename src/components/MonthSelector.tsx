@@ -5,8 +5,16 @@ interface Props {
 }
 
 export default function MonthSelector({ month, year, onChange }: Props) {
+  const label = new Date(year, month).toLocaleString("default", { month: "long", year: "numeric" });
+
+  function shiftMonth(offset: number) {
+    const next = new Date(year, month + offset, 1);
+    onChange(next.getMonth(), next.getFullYear());
+  }
+
   return (
     <div className="month-selector" aria-label="Select budget month">
+      <button type="button" className="period-button" aria-label={`Previous month before ${label}`} onClick={() => shiftMonth(-1)}>‹</button>
       <label>
         <span className="sr-only">Month</span>
       <select
@@ -31,6 +39,7 @@ export default function MonthSelector({ month, year, onChange }: Props) {
         onChange={(e) => onChange(month, Number(e.target.value))}
       />
       </label>
+      <button type="button" className="period-button" aria-label={`Next month after ${label}`} onClick={() => shiftMonth(1)}>›</button>
     </div>
   );
 }

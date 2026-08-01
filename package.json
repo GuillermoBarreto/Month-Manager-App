@@ -1,6 +1,7 @@
 {
   "name": "month-manager-app",
   "version": "1.0.0",
+  "description": "A local-first monthly personal finance dashboard built with React and TypeScript.",
   "private": true,
   "scripts": {
     "dev": "vite",
