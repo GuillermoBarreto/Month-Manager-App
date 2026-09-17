@@ -15,8 +15,9 @@ export default function App() {
   const [transactionsByMonth, setTransactionsByMonth] = useState(loadAllTransactions);
   const key = monthKey(month, year);
   const transactions = transactionsByMonth[key] ?? [];
-  const defaultDate = new Date(year, month, 1).toISOString().slice(0, 10);
-  const maxDate = new Date(year, month + 1, 0).toISOString().slice(0, 10);
+  const datePrefix = `${year}-${String(month + 1).padStart(2, "0")}`;
+  const defaultDate = `${datePrefix}-01`;
+  const maxDate = `${datePrefix}-${new Date(year, month + 1, 0).getDate()}`;
 
   function updateTransactions(updater: (current: Transaction[]) => Transaction[]) {
     setTransactionsByMonth(previous => {
