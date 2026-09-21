@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Transaction } from "../types/finance";
 
 interface Props {
@@ -5,23 +6,34 @@ interface Props {
 }
 
 export default function Summary({ transactions }: Props) {
-  const income = transactions
-    .filter(t => t.type === "income")
-    .reduce((s, t) => s + t.amount, 0);
+  const currency = useMemo(
+    () => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }),
+    [],
+  );
 
-  const expenses = transactions
-    .filter(t => t.type === "expense")
-    .reduce((s, t) => s + t.amount, 0);
+  const { income, incomeCount, expenses, topCategory } = useMemo(() => {
+    let income = 0;
+    let incomeCount = 0;
+    let expenses = 0;
+    const totalsByCategory: Record<string, number> = {};
+    for (const t of transactions) {
+      if (t.type === "income") {
+        income += t.amount;
+        incomeCount += 1;
+      } else {
+        expenses += t.amount;
+        totalsByCategory[t.category] = (totalsByCategory[t.category] ?? 0) + t.amount;
+      }
+    }
+    const topCategory = Object.entries(totalsByCategory).sort(([, a], [, b]) => b - a)[0];
+    return { income, incomeCount, expenses, topCategory };
+  }, [transactions]);
+
   const balance = income - expenses;
-  const topExpense = transactions
-    .filter(t => t.type === "expense")
-    .reduce<Record<string, number>>((totals, t) => ({ ...totals, [t.category]: (totals[t.category] ?? 0) + t.amount }), {});
-  const topCategory = Object.entries(topExpense).sort(([, a], [, b]) => b - a)[0];
-  const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 
   return (
     <section className="summary-grid" aria-label="Monthly summary">
-      <div className="summary-card income-card"><span>Income</span><strong>{currency.format(income)}</strong><small>{transactions.filter(t => t.type === "income").length} entry{transactions.filter(t => t.type === "income").length === 1 ? "" : "ies"}</small></div>
+      <div className="summary-card income-card"><span>Income</span><strong>{currency.format(income)}</strong><small>{incomeCount} entry{incomeCount === 1 ? "" : "ies"}</small></div>
       <div className="summary-card expense-card"><span>Expenses</span><strong>{currency.format(expenses)}</strong><small>{topCategory ? `${topCategory[0]} is your largest category` : "Add an expense to start tracking"}</small></div>
       <div className={`summary-card balance-card ${balance < 0 ? "negative" : ""}`}><span>Balance</span><strong>{currency.format(balance)}</strong><small>{balance < 0 ? "Spending exceeds income" : balance === 0 ? "Ready for your first entry" : "Available after expenses"}</small></div>
     </section>
