@@ -20,7 +20,14 @@ function isTransaction(value: unknown): value is Transaction {
 }
 
 export function loadAllTransactions(): TransactionsByMonth {
-  const raw = localStorage.getItem(STORAGE_KEY);
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem(STORAGE_KEY);
+  } catch {
+    // localStorage.getItem can throw in sandboxed contexts (e.g. blocked
+    // third-party cookies); treat as empty storage.
+    return {};
+  }
   if (!raw) return {};
 
   try {
