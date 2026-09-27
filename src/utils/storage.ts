@@ -15,6 +15,7 @@ function isTransaction(value: unknown): value is Transaction {
     && (transaction.type === "income" || transaction.type === "expense")
     && typeof transaction.amount === "number"
     && Number.isFinite(transaction.amount)
+    && transaction.amount > 0
     && typeof transaction.category === "string"
     && typeof transaction.date === "string";
 }
