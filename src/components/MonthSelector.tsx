@@ -36,7 +36,15 @@ export default function MonthSelector({ month, year, onChange }: Props) {
         min="2000"
         max="2100"
         value={year}
-        onChange={(e) => onChange(month, Number(e.target.value))}
+        onChange={(e) => {
+          // Clearing or partially editing the field produces "" (Number 0)
+          // or out-of-range values; only propagate a real year so the
+          // budget month never silently becomes year 0.
+          const nextYear = Number(e.target.value);
+          if (Number.isInteger(nextYear) && nextYear >= 2000 && nextYear <= 2100) {
+            onChange(month, nextYear);
+          }
+        }}
       />
       </label>
       <button type="button" className="period-button" aria-label={`Next month after ${label}`} onClick={() => shiftMonth(1)}>›</button>
