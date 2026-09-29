@@ -30,12 +30,13 @@ export default function Summary({ transactions }: Props) {
   }, [transactions]);
 
   const balance = income - expenses;
+  const hasEntries = transactions.length > 0;
 
   return (
     <section className="summary-grid" aria-label="Monthly summary">
       <div className="summary-card income-card"><span>Income</span><strong>{currency.format(income)}</strong><small>{incomeCount} {incomeCount === 1 ? "entry" : "entries"}</small></div>
       <div className="summary-card expense-card"><span>Expenses</span><strong>{currency.format(expenses)}</strong><small>{topCategory ? `${topCategory[0]} is your largest category` : "Add an expense to start tracking"}</small></div>
-      <div className={`summary-card balance-card ${balance < 0 ? "negative" : ""}`}><span>Balance</span><strong>{currency.format(balance)}</strong><small>{balance < 0 ? "Spending exceeds income" : balance === 0 ? "Ready for your first entry" : "Available after expenses"}</small></div>
+      <div className={`summary-card balance-card ${balance < 0 ? "negative" : ""}`}><span>Balance</span><strong>{currency.format(balance)}</strong><small>{balance < 0 ? "Spending exceeds income" : !hasEntries ? "Ready for your first entry" : balance === 0 ? "Breaking even" : "Available after expenses"}</small></div>
     </section>
   );
 }
