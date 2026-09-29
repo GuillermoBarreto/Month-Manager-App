@@ -17,7 +17,8 @@ function isTransaction(value: unknown): value is Transaction {
     && Number.isFinite(transaction.amount)
     && transaction.amount > 0
     && typeof transaction.category === "string"
-    && typeof transaction.date === "string";
+    && typeof transaction.date === "string"
+    && (transaction.note === undefined || typeof transaction.note === "string");
 }
 
 export function loadAllTransactions(): TransactionsByMonth {
