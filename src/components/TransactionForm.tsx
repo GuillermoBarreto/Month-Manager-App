@@ -37,8 +37,8 @@ export default function TransactionForm({ type, defaultDate, maxDate, onAdd }: P
         <label>Amount<input aria-label={`${type} amount`} placeholder="0.00" type="number" min="0.01" step="0.01" inputMode="decimal" required value={amount} onChange={(event) => setAmount(event.target.value)} /></label>
         <label>Date<input aria-label={`${type} date`} type="date" min={defaultDate} max={maxDate} required value={date} onChange={(event) => setDate(event.target.value)} /></label>
       </div>
-      <label>Category<input placeholder={isIncome ? "Salary, freelance…" : "Rent, groceries…"} required value={category} onChange={(event) => setCategory(event.target.value)} /></label>
-      <label>Note <span className="optional">optional</span><input placeholder="Add a short description" value={note} onChange={(event) => setNote(event.target.value)} /></label>
+      <label>Category<input placeholder={isIncome ? "Salary, freelance…" : "Rent, groceries…"} maxLength={50} required value={category} onChange={(event) => setCategory(event.target.value)} /></label>
+      <label>Note <span className="optional">optional</span><input placeholder="Add a short description" maxLength={160} value={note} onChange={(event) => setNote(event.target.value)} /></label>
       <button type="submit">Add {type}</button>
     </form>
   );
