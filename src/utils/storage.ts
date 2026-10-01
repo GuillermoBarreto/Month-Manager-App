@@ -5,6 +5,11 @@ const STORAGE_KEY = "month-manager-data";
 export type TransactionsByMonth = Record<string, Transaction[]>;
 
 export function monthKey(month: number, year: number) {
+  if (!Number.isInteger(month) || month < 0 || month > 11) {
+    throw new RangeError(
+      `Invalid month ${String(month)}: expected an integer between 0 and 11.`,
+    );
+  }
   return `${year}-${month}`;
 }
 
