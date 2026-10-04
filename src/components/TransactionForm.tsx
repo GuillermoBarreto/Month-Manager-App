@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { TransactionDraft, TransactionType } from "../types/finance";
 
 interface Props {
@@ -12,6 +12,12 @@ export default function TransactionForm({ type, defaultDate, maxDate, onAdd }: P
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState(defaultDate);
+
+  // Keep the date picker in sync when the selected month changes,
+  // otherwise it keeps the previous month's default while min/max move.
+  useEffect(() => {
+    setDate(defaultDate);
+  }, [defaultDate]);
   const [note, setNote] = useState("");
   const isIncome = type === "income";
 
