@@ -10,6 +10,11 @@ export function monthKey(month: number, year: number) {
       `Invalid month ${String(month)}: expected an integer between 0 and 11.`,
     );
   }
+  if (!Number.isInteger(year)) {
+    throw new RangeError(
+      `Invalid year ${String(year)}: expected an integer.`,
+    );
+  }
   return `${year}-${month}`;
 }
 
