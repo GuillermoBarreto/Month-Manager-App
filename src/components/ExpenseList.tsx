@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Transaction } from "../types/finance";
 
 interface Props {
@@ -6,8 +7,16 @@ interface Props {
 }
 
 export default function ExpenseList({ items, onDelete }: Props) {
-  const currency = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
-  const sortedItems = [...items].sort((a, b) => b.date.localeCompare(a.date));
+  // Memoized: constructing an Intl formatter is expensive, and re-sorting on
+  // every render is wasted work when the parent re-renders for other reasons.
+  const currency = useMemo(
+    () => new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }),
+    [],
+  );
+  const sortedItems = useMemo(
+    () => [...items].sort((a, b) => b.date.localeCompare(a.date)),
+    [items],
+  );
   return (
     <section className="transaction-list expense-list">
       <div className="list-heading"><h2>Expenses</h2><span>{items.length}</span></div>
