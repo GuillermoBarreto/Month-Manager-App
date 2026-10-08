@@ -19,13 +19,20 @@ export default function TransactionForm({ type, defaultDate, maxDate, onAdd }: P
     setDate(defaultDate);
   }, [defaultDate]);
   const [note, setNote] = useState("");
+  const [formError, setFormError] = useState("");
   const isIncome = type === "income";
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const value = Number(amount);
     const trimmedCategory = category.trim();
-    if (!trimmedCategory || !Number.isFinite(value) || value <= 0 || !date) return;
+    if (!trimmedCategory || !Number.isFinite(value) || value <= 0 || !date) {
+      // Show an inline error instead of failing silently so the user knows
+      // why nothing was added.
+      setFormError("Please enter a valid amount, category, and date.");
+      return;
+    }
+    setFormError("");
 
     onAdd({ amount: value, category: trimmedCategory, date, note: note.trim() || undefined });
     setAmount("");
@@ -45,6 +52,7 @@ export default function TransactionForm({ type, defaultDate, maxDate, onAdd }: P
       </div>
       <label>Category<input placeholder={isIncome ? "Salary, freelance…" : "Rent, groceries…"} maxLength={50} required value={category} onChange={(event) => setCategory(event.target.value)} /></label>
       <label>Note <span className="optional">optional</span><input placeholder="Add a short description" maxLength={160} value={note} onChange={(event) => setNote(event.target.value)} /></label>
+      {formError && <p role="alert" className="form-error">{formError}</p>}
       <button type="submit">Add {type}</button>
     </form>
   );
