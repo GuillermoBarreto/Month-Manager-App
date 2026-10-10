@@ -33,6 +33,13 @@ export default function TransactionForm({ type, defaultDate, maxDate, onAdd }: P
       return;
     }
     setFormError("");
+    // Browsers don't always enforce the date picker's min/max on typed input,
+    // and App.tsx buckets by the selected month regardless of the draft date —
+    // so reject out-of-month dates here (YYYY-MM-DD compares lexicographically).
+    if (date < defaultDate || date > maxDate) {
+      setFormError("Please pick a date within the selected month.");
+      return;
+    }
 
     onAdd({ amount: value, category: trimmedCategory, date, note: note.trim() || undefined });
     setAmount("");
