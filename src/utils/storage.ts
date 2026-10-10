@@ -56,10 +56,12 @@ export function loadAllTransactions(): TransactionsByMonth {
   }
 }
 
-export function saveAllTransactions(data: TransactionsByMonth) {
+export function saveAllTransactions(data: TransactionsByMonth): boolean {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return true;
   } catch (error) {
     console.error("Unable to save Month Manager data.", error);
+    return false;
   }
 }

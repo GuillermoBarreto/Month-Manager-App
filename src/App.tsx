@@ -13,6 +13,7 @@ export default function App() {
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
   const [transactionsByMonth, setTransactionsByMonth] = useState(loadAllTransactions);
+  const [saveError, setSaveError] = useState("");
   const key = monthKey(month, year);
   const transactions = transactionsByMonth[key] ?? [];
   const datePrefix = `${year}-${String(month + 1).padStart(2, "0")}`;
@@ -22,7 +23,13 @@ export default function App() {
   function updateTransactions(updater: (current: Transaction[]) => Transaction[]) {
     setTransactionsByMonth(previous => {
       const next = { ...previous, [key]: updater(previous[key] ?? []) };
-      saveAllTransactions(next);
+      // A full/blocked localStorage would otherwise silently drop entries —
+      // surface it so the user knows their data wasn't saved.
+      if (!saveAllTransactions(next)) {
+        setSaveError("Couldn't save your changes — browser storage may be full.");
+      } else {
+        setSaveError("");
+      }
       return next;
     });
   }
@@ -48,6 +55,12 @@ export default function App() {
       </header>
 
       <Summary transactions={transactions} />
+
+      {saveError && (
+        <p role="alert" className="storage-error">
+          {saveError}
+        </p>
+      )}
 
       <section className="content-grid" aria-label="Monthly transactions">
         <div className="forms-panel">
